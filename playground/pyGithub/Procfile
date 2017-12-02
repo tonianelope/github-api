@@ -1,3 +1,2 @@
 web: gunicorn login:app --log-file -
 
-# web: play run --http.port=$PORT $PLAY_OPTS
