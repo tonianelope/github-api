@@ -5,14 +5,14 @@ from flask_oauth import OAuth
 from flask.json import jsonify
 
 
-SECRET_KEY = os.environ.get("AGITHUB_FSKEY", "")
+SECRET_KEY = os.environ.get("API_KEY", "")
 
 GITHUB_APP_KEY = '754c9740c776a9321668'
-GITHUB_APP_SECRET = os.environ.get("AGITHUB_SKEY", "")
+GITHUB_APP_SECRET = os.environ.get("GITHUB_SECRET", "")
 
 app = Flask(__name__)
 #app.debug = DEBUG
-#app.secret_key = SECRET_KEY
+app.secret_key = SECRET_KEY
 oauth = OAuth()
 
 github = oauth.remote_app(
