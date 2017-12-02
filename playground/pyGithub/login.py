@@ -37,20 +37,16 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print('2')
-    print(SECRET_KEY)
-    print(GITHUB_APP_SECRET)
     return github.authorize(
         callback=url_for(
             'github_auth',
-            next=request.args.get('next') or request.referrer or None,
-            _external=True
+            next=request.args.get('next') or request.referrer or None
         )
     )
 
 @app.route('/auth')
 def github_auth(resp):
-    print('3')
+    logging.debug(resp)
     if resp is None:
         return 'Access denied: reason={} error={}'.format(
             request.args['error_reason'],
