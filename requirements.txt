@@ -14,7 +14,6 @@ itsdangerous==0.24
 jedi==0.10.2
 Jinja2==2.10
 json-rpc==1.10.3
-liblarch>=2.1.0
 lxml==4.1.1
 MarkupSafe==1.0
 mccabe==0.6.1
