@@ -40,13 +40,14 @@ def login():
     return github.authorize(
         callback=url_for(
             'github_auth',
-            next=request.args.get('next') or request.referrer or None
+            resp=request.args.get('next') or request.referrer or None,
+            _external=True
         )
     )
 
-@app.route('/auth')
+@app.route('/auth/<resp>')
 def github_auth(resp):
-    logging.debug(resp)
+    print('3')
     if resp is None:
         return 'Access denied: reason={} error={}'.format(
             request.args['error_reason'],
