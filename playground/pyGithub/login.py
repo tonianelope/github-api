@@ -1,7 +1,8 @@
 import github
 import os
 from flask import Flask, redirect, url_for, session, request, render_template
-from flask_oauth import OAuth
+from flask_oauthlib.client import OAuth
+#from flask_oauth import OAuth
 from flask.json import jsonify
 from werkzeug.contrib.fixers import ProxyFix
 
