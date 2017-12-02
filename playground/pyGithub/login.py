@@ -3,6 +3,7 @@ import os
 from flask import Flask, redirect, url_for, session, request, render_template
 from flask_oauth import OAuth
 from flask.json import jsonify
+from werkzeug.contrib.fixers import ProxyFix
 
 
 SECRET_KEY = os.environ.get("API_KEY", "")
@@ -65,6 +66,7 @@ def profile():
 
     return jsonify(repos)
 
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback
