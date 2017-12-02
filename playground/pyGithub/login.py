@@ -6,7 +6,7 @@ from flask.json import jsonify
 from werkzeug.contrib.fixers import ProxyFix
 
 
-SECRET_KEY = os.environ.get("API_KEY", "")
+SECRET_KEY = os.urandom(24) #os.environ.get("API_KEY", "")
 
 GITHUB_APP_KEY = '754c9740c776a9321668'
 GITHUB_APP_SECRET = os.environ.get("GITHUB_SECRET", "")
@@ -37,6 +37,8 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     print('2')
+    print(SECRET_KEY)
+    print(GITHUB_APP_SECRET)
     return github.authorize(
         callback=url_for(
             'github_auth',
@@ -66,7 +68,7 @@ def profile():
 
     return jsonify(repos)
 
-app.wsgi_app = ProxyFix(app.wsgi_app)
+#app.wsgi_app = ProxyFix(app.wsgi_app)
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback
