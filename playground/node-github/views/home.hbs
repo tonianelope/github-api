@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>About Page</title>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    </head>
+    <body>
+        <h1>Hello</h1>
+        <p>
+            We're going to now talk to the GitHub API. Ready?
+            <a href="https://github.com/login/oauth/authorize?scope=user:email&client_id={{client_id}}">Click here</a> to begin!</a>
+        </p>
+        <p>Login</p>
+        <input name="like" id="like" value="Github" type="submit" />
+        <script>
+         $('#like').click(function(){
+             console.log("POSITING\n");
+             $.post('/login');
+         });
+        </script>
+    </body>
+</html>

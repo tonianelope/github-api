@@ -1,1 +1,10 @@
 *.pyc
+*/.env
+/playground/pyGithub/.env
+/playground/octonode/package-lock.json
+/playground/node-github/node_modules/.bin/handlebars
+/playground/octonode/.tern-port
+/playground/octonode/.env
+/playground/node-github/.env
+/playground/node-github/.tern-port
+/*.log
