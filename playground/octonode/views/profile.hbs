@@ -2,15 +2,40 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>About Page</title>
+        <title>Profile Page</title>
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
     </head>
+
+
+
     <body>
-        <h1>Hello, {{user}}</h1>
-        <p>
-            We're going to now talk to the GitHub API. Ready?
-        </p>
-        <p>Login</p>
-        <input name="like" id="like" value="logout" type="submit" onclick="location.href = '/';"/>
+        <!-- <h1>Hello, {{user}}</h1>
+             <p>
+             We're going to now talk to the GitHub API. Ready?
+             </p>
+             <p>Login</p>
+             <input name="like" id="like" value="logout" type="submit" onclick="location.href = '/';"/>
+             </body> -->
+
+
+        <figure class="snip1336">
+            <img src={{user_image}} alt="sample87" />
+            <figcaption>
+                <img src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png" alt="profile-sample4" class="profile" />
+                <h2>{{user}}<span>Github account</span></h2>
+
+                <h3>Repos</h3>
+                {{#list repos}}
+                    <p> {{name}} - Owner:{{owner.login}} ({{#if private}} private {{else}} public {{/if}})</p>
+                {{/list}}
+                <p>I'm looking for something that can deliver a 50-pound payload of snow on a small feminine target. Can you suggest something? Hello...? </p>
+                <a href="#" class="follow">Follow</a>
+                <a href="#" class="info">More Info</a>
+            </figcaption>
+        </figure>
+
     </body>
 </html>
+
+
