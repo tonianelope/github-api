@@ -1,2 +1,20 @@
 <h1>Github Visualisation</h1>
+
 <input name="like" id="like" value="Login to Github" type="submit" onclick="location.href = '/user/login';"/>
+
+<form action="/repo"  method="post">
+    Repo Name: <input type="text" name="repo" value=""><br>
+    <input type="submit" value="Submit">
+</form>
+
+<form action="/map" method="get">
+    <select data-style="btn-info" name="repo">
+        <optgroup label="Select Repo">
+        <option value="volvo">Repo1</option>
+        <option value="saab">repo2</option>
+        <option value="opel">repo3</option>
+        <option value="audi">repo4</option>
+        </optgroup>
+    </select>
+    <input type="submit" value="Submit">
+</form>

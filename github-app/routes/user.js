@@ -26,7 +26,7 @@ router.get('/login', (req, res)=>{
     res.end('Redirecting to ' + auth_url);
 });
 
-app.get('/auth', (req, res)=>{
+router.get('/auth', (req, res)=>{
     console.log("AUTH");
     var uri = url.parse(req.url);
     var values = qs.parse(uri.query);
@@ -45,7 +45,7 @@ app.get('/auth', (req, res)=>{
     }
 });
 
-app.get('/profile', (req, res)=>{
+router.get('/profile', (req, res)=>{
     //check if client
     var ghme = client.me();
     ghme.info((err, info)=>{

@@ -7,13 +7,16 @@ router.get('/', (req, res, next)=> {
   res.render('index', { title: 'Github Visual' });
 });
 
-router.get('/get-repo', (req, res, next)=>{
-    //input from from
-    //call function pass repo??
+router.post('/repo', (req, res, next)=>{
+    //res.send('You entered the repo "' + req.body.repo + '".');
+    //makeJSON(req.body.repo);
+    res.redirect(`/map?repo=${req.body.repo}`);
 });
 
 router.get('/map', (req, res)=>{
-  res.render('worldmap');
+    console.log(req.query.repo); // selected val
+    //select input json!
+    res.render('worldmap');
 });
 
 module.exports = router;

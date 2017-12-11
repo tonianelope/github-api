@@ -8,3 +8,6 @@
 /playground/node-github/.env
 /playground/node-github/.tern-port
 /*.log
+/github-app/node_modules/arr-diff/index.js
+*/node_modules/*
+*/*/node_modules/*
