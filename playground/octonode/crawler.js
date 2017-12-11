@@ -42,3 +42,8 @@ ghocto.contributors((err, contributers, head)=>{
 
 });
 
+//             client.get('/user', {}, function (err, status, body, headers) {
+//                 console.log(body); //json object
+// //                res.render(body);
+//             });
+            //res.end(token);
