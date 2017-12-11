@@ -6,6 +6,7 @@ var RepoSchema = new Schema({
 
     repo_id: {type: Number, required: true},
     name: {type: String, required: true},
+    path: {type: String, required: true},
     description: String,
     size: Number, //???
     owner: {type: Schema.ObjectId, ref: 'User'},
