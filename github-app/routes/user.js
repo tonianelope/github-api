@@ -27,19 +27,15 @@ router.get('/login', (req, res)=>{
 });
 
 router.get('/auth', (req, res)=>{
-    console.log("AUTH");
-    var uri = url.parse(req.url);
-    var values = qs.parse(uri.query);
     // Check against CSRF attacks
-    if (!state || state[1] != values.state) {
+    if (!state || state[1] != req.query.state) {
         res.writeHead(403, {'Content-Type': 'text/plain'});
         res.end('');
         console.log("ERROR");
     } else {
-        github.auth.login(values.code, function (err, token, headers) {
+        github.auth.login(req.query.code, function (err, token, headers) {
             //res.writeHead(200, {'Content-Type': 'text/plain'});
             client = github.client(token);
-            console.log('SET CLIENT');
             res.redirect('/profile');
         });
     }
