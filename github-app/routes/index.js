@@ -1,5 +1,5 @@
 var express = require('express');
-var scraper = require('../scraper');
+var scraper = require('../public/js/scraper');
 //var github = require('octonode');
 var router = express.Router();
 
@@ -8,7 +8,7 @@ router.get('/', (req, res, next)=> {
   res.render('index', { title: 'Github Visual' });
 });
 
-router.post('/repo', scraper.get_repo);
+router.post('/repo', scraper.insert_user);
     //(req, res, next)=>{
     //res.send('You entered the repo "' + req.body.repo + '".');
     //makeJSON(req.body.repo);

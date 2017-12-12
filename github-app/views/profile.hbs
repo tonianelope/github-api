@@ -1,0 +1,15 @@
+<figure class="snip1336">
+    <img src={{user_image}} alt="sample87" />
+    <figcaption>
+        <img src="https://cdn3.iconfinder.com/data/icons/inficons/512/github.png" alt="profile-sample4" class="profile" />
+        <h2>{{user}}<span>Github account</span></h2>
+
+        <h3>Repos</h3>
+        {{#list repos}}
+            <p> {{name}} - Owner:{{owner.login}} ({{#if private}} private {{else}} public {{/if}})</p>
+        {{/list}}
+        <p>I'm looking for something that can deliver a 50-pound payload of snow on a small feminine target. Can you suggest something? Hello...? </p>
+        <a href="#" class="follow">Follow</a>
+        <a href="/" class="info">Home screen</a>
+    </figcaption>
+</figure>

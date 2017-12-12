@@ -1,0 +1,42 @@
+body {
+    padding: 0px;
+}
+
+svg {
+    display: block;
+    margin: auto;
+}
+
+.land {
+    fill: #222;
+}
+
+.boundary {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 0.4px;
+}
+
+.tooltip {
+    position: absolute;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgba(54, 173, 217, 0.8);
+    color: white;
+    opacity: 1;
+    font-size: 14px;
+    font-family: Roboto;
+    text-align: center;
+    pointer-events: none;
+}
+
+.title {
+    position: absolute;
+    left: 10px;
+    background-color: rgba(54, 173, 217, 0.8);
+    border-radius: 5px;
+    font-family: Roboto;
+    color: white;
+    padding: 10px;
+}

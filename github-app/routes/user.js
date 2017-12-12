@@ -3,12 +3,14 @@ var github = require('octonode');
 var router = express.Router();
 
 /* Configure github oath */
-var auth_url = github.auth.config({
+var auth = github.auth.config({
     id: process.env.CLIENT_ID,
     secret: process.env.CLIENT_SECRET,
     apiUrl: 'https://github.com/',
     webUrl: 'https://github.com/'
-}).login(['user', 'repo']); // and gist for read write access
+});
+
+var auth_url = auth.login(['user', 'repo']); // and gist for read write access
 
 // Store info to verify against CSRF
 var state = auth_url.match(/&state=([0-9a-z]{32})/i);
@@ -36,7 +38,9 @@ router.get('/auth', (req, res)=>{
         github.auth.login(req.query.code, function (err, token, headers) {
             //res.writeHead(200, {'Content-Type': 'text/plain'});
             client = github.client(token);
-            res.redirect('/profile');
+            console.log("CLIENT INITIALISED");
+            console.log(client);
+            res.redirect('profile');
         });
     }
 });
@@ -44,22 +48,33 @@ router.get('/auth', (req, res)=>{
 router.get('/profile', (req, res)=>{
     //check if client
     var ghme = client.me();
-    ghme.info((err, info)=>{
+    ghme.info((err, info, head)=>{
         if(err) throw err;
-        console.log(info);
+        console.log(head);
 
-        ghme.repos((err1, repos)=>{
-            if(err1) throw err1;
-            console.log(repos);
-
-            res.render('profile.hbs', {
-                user: info.login,
-                user_image: info.avatar_url,
-                github: info.html_url,
-                repos: repos
-            });
-        });
+        // ghme.repos((err1, repos)=>{
+        //     if(err1) throw err1;
+        //     console.log(repos);
+        //
+        //     res.render('profile.hbs', {
+        //         user: info.login,
+        //         user_image: info.avatar_url,
+        //         github: info.html_url,
+        //         repos: repos
+        //     });
+        // });
+        res.render('profile.hbs', {
+                    user: info.login,
+                    user_image: info.avatar_url,
+                    github: info.html_url,
+                    repos: []
+                });
     });
 });
 
-module.exports = router;
+
+
+module.exports = {
+    router:router,
+    client:client
+};

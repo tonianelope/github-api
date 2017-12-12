@@ -1,9 +1,12 @@
-var User = require('./models/user');
-var Repo = require('./models/repo');
-var Commit = require('./models/commit');
+var User = require('../../models/user');
+var Repo = require('../../models/repo');
+var Commit = require('../../models/commit');
+var auth = require('../../routes/user');
 var github = require('octonode');
 
+//move!!!
 var client = github.client();
+
 
 save_user = function (user_login, cb) {
     console.log(`Saving ${user_login}`);
@@ -20,7 +23,8 @@ save_user = function (user_login, cb) {
             avatar_url: info.avatar_url
         });
         u.save((err)=>{
-            throw err;
+           if(err) throw err;
+            console.log("New User: "+u);
         });
         cb(u._id);
     });
@@ -40,6 +44,9 @@ get_user = function(user_login, cb){
 
 
 save_repo = function(repo_name){
+    //client = auth.client;
+    //console.log("CLIENT IS: "+client);
+    //client = undefined;
     var ghrepo = client.repo(repo_name);
     ghrepo.contributors((err, contributors, head) => {
         console.log(head);
@@ -47,8 +54,8 @@ save_repo = function(repo_name){
         else{
             var contribs = [];
             for(var i=0; i<contributors.length; i++){
-                console.log(contributors[i]);
-                exit();
+                //console.log(contributors[i]);
+                //console.log(contributors[i].contributions);
                 get_user(contributors[i].login, (user_id)=>{
                     contribs.push({
                         contributions: contributors[i].contributions,
@@ -70,7 +77,8 @@ save_repo = function(repo_name){
                    contributors: contribs
                });
                r.save((err)=>{
-                   throw err;
+                   if(err) throw err;
+                   console.log("New repo: "+r);
                });
             });
         }
@@ -90,4 +98,20 @@ exports.get_repo = (req, res, next) =>{
     });
     console.log('END SCRAPE');
     res.redirect('/map');
+};
+
+exports.insert_user = (req, res, next)=>{
+    var u = new User({
+        user_id: 1,
+        name: "monalisa octocat",
+        login: 'octocat',
+        location: "San Francisco",
+        avatar_url: "https://github.com/images/error/octocat_happy.gif"
+    });
+    u.save((err)=>{
+        if(err) throw err;
+        console.log("New User: "+u);
+    });
+    //cb(null, u);
+    res.send(u);
 };

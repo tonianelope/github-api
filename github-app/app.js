@@ -4,9 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var hbs = require('hbs');
 
 var index = require('./routes/index');
-var user = require('./routes/user');
+var user = require('./routes/user').router;
 
 var app = express();
 
@@ -51,5 +52,25 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+hbs.registerHelper('list', function(context, options) {
+    var ret = "<ul>";
+
+    for(var i=0, j=context.length; i<j; i++) {
+        ret = ret + "<li>" + options.fn(context[i]) + "</li>";
+    }
+
+    return ret + "</ul>";
+});
+
+hbs.registerHelper('if', function(conditional, options) {
+    if(conditional) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+
+
 
 module.exports = app;
