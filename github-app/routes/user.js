@@ -38,8 +38,9 @@ router.get('/auth', (req, res)=>{
         github.auth.login(req.query.code, function (err, token, headers) {
             //res.writeHead(200, {'Content-Type': 'text/plain'});
             client = github.client(token);
+            process.env['GITHUB_TOKEN'] = token;
             console.log("CLIENT INITIALISED");
-            console.log(client);
+            //console.log(client);
             res.redirect('profile');
         });
     }
