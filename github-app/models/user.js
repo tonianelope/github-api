@@ -6,7 +6,7 @@ var UserSchema = new Schema({
     user_id: {type: Number, required: true},
     name: {type: String},
     login: {type: String, required: true},
-    location: {type: String, required: true},
+    location: String,
     avatar_url: {type: String}
 });
 

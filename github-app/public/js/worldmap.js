@@ -35,9 +35,9 @@ let tooltip = d3.select("body")
 const URL = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/meteorite-strike-data.json"
     // All the meteorite strikes
 const repofile = "/json/repo.json";
-d3.json(URL, d => {
+d3.json(repofile, d => {
     let mScale = d3.scaleLinear()
-        .domain([0, 3000000])
+        .domain([0, d.max])
         .range([2.3, 80])
         .clamp(true)
 

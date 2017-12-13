@@ -1,17 +1,20 @@
-var axios = require('axios');
+var request = require('request');
 
 var locations = ["United Kingdom",  "Berlin, Germany", "err"];
 
+var options = {
+    hostname: 'nominatim.openstreetmap.org',
+    path: '/serach',
+
+};
 
 for(var i = 0; i<locations.length; i++){
     var gecodeURL = `http://nominatim.openstreetmap.org/search?format=json&q=${locations[i]}`;
 
-    axios.get(gecodeURL)
-        .then((res)=>{
-            console.log(res);
-        })
-        .catch((err)=>{
-            console.log(err);
-        });
+    request.get(gecodeURL, (err, res, body)=>{
+        console.log(res);
+        console.log();
+        console.log(body);
+    });
 }
 

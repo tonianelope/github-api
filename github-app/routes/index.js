@@ -1,6 +1,6 @@
 var express = require('express');
 var scraper = require('../public/js/scraper');
-var makeJSON = require('../public/js/jsonController');
+var jsonControl = require('../public/js/jsonController');
 //var github = require('octonode');
 var router = express.Router();
 
@@ -10,13 +10,13 @@ router.get('/', (req, res, next)=> {
 });
 
 router.post('/repo', scraper.get_repo, (req, res)=>{
-
     res.redirect('/load');
 });
 
 router.get('/load', (req, res)=>{
-    makeJSON(req.body.repo, (err)=>{
-        if(err) next(err);
+    console.log(req.query.repo);
+    jsonControl.makeJSON(req.query.repo, (err)=>{
+        if(err) throw(err);
         res.redirect('/map');
     })
 

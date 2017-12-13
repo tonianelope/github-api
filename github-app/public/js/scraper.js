@@ -67,7 +67,7 @@ save_repo = function (repo_name, cb) {
 };
 
 get_contributors = function(contributors, i, r, cb){
-    if(i > contributors.length){
+    if(i >= contributors.length){
         cb(undefined, r);
         return;
     }
