@@ -1,8 +1,8 @@
 var User = require('../../models/user');
 var Repo = require('../../models/repo');
 var Commit = require('../../models/commit');
-var axios = require('axios');
 
+var request = require('request');
 var fs = require("fs");
 // POPULATE BASED ON CONDITION
 // populate({
@@ -22,49 +22,70 @@ exports.makeJSON = (repo_name, cb) => {
     };
     console.log("LOOKING FOR "+repo_name);
     Repo.findOne({path: repo_name})
-        //.populate('owner')
+        .populate('owner')
         .populate('contributors.user')
         .exec((err, repo) => {
-            //and info about repo??
-            console.log(repo.contributors.length);
-            add_all(repo.contributors, 0, map_data, (err, map_data) => {
-                if(err){
-                    cb(err, undefined);
-                    return;
-                }
-                console.log("writing json");
-                fs.writeFile(`../json/repo.json`, JSON.stringify(map_data));
-            });
+            console.log(JSON.stringify(repo, null, "\t"));
+            if(repo) {
+
+                //and info about repo??
+                              console.log(repo.contributors.length);
+
+                add_all(repo.contributors, 0, map_data, (err, new_map_data) => {
+                    if (err) {
+                        cb(err);
+                        return;
+                    }
+                    console.log(new_map_data);
+                    console.log("writing json");
+                    fs.writeFile(`public/json/repo.json`, JSON.stringify(new_map_data), (err) => {
+                        if (err) cb(err, undefined);
+                        console.log("Wrote file");
+                        cb(undefined);
+                    });
+                });
+            }else{
+                cb("REPO NOT FOUD");
+            }
         });
+
 };
 
 
 var add_all = function (users, i, map_data, cb) {
     //console.log(users);
-    //console.log(i)
-    //console.log(" AT "+ users[i].user);
+    console.log(i)
+    if(i >= users.length){
+        cb(undefined, map_data);
+        return;
+    }
     var location = users[i].user.location;
+    console.log("LOC1: "+location);
     if(location){
         get_coordinates(users[i].user.location, (err, long, lat)=>{
-            if(err){
+            console.log(err);
+            if(long && lat) {
+                console.log("Pushing "+users[i].user.login + long);
+                map_data.features.push({
+                    "type": "Feature",
+                    "properties": {
+                        "mass": users[i].contributions.toString(),
+                        "login": users[i].user.login,
+                        "name": users[i].user.name,
+                        "reclong": long,
+                        "reclat": lat,
+                        "city": users[i].user.location,
+                        "image": users[i].user.avatar_url
+                    }
+                });
+            }
+            else if(err && err !== "NO RESULT"){
                 cb(err, undefined);
                 return;
             }
             if(i===0){
                 map_data.max = users[i].contributions;
             }
-            map_data.features.push({
-                "type": "Feature",
-                "properties": {
-                    "mass": users[i].contributions,
-                    "login": users[i].user.login,
-                    "name": users[i].user.name,
-                    "reclong": long,
-                    "reclat": lat,
-                    "city": users[i].user.location,
-                    "image": users[i].user.avatar_url
-                }
-            });
             add_all(users, i+1, map_data, cb);
         });
     }
@@ -77,19 +98,23 @@ var add_all = function (users, i, map_data, cb) {
 var get_coordinates = function(location, cb){
     // multiple locations???
 
-    locations = location.split("and");
-    var gecodeURL = `http://nominatim.openstreetmap.org/search?format=json&q=${locations[0]}`;
-
-    axios.get(gecodeURL)
-        .then((res)=>{
-            //console.log(res.data);
-            if(res.data.length > 0){
-                cb(undefined, res.data[0].lon, res.data[0].lat);
-                return;
+    var locations = location.split("and");
+    console.log(locations[0]);
+    var gecodeURL = `http://nominatim.openstreetmap.org/search?format=json&accept-language=en&q=${encodeURIComponent(locations[0])}`;
+    console.log("LOC: "+locations);
+    //TODO jsonify response!!!
+    request.get(gecodeURL, (err, res, body)=>{
+        console.log(body.length);
+        if(err) cb(err, undefined, undefined);
+        else{
+            var data = JSON.parse(body);
+            console.log(data);
+            console.log(res);
+            if(data.length > 0){
+                cb(undefined, data[0].lon, data[0].lat);
+            }else{
+                cb("NO RESULT", undefined, undefined);
             }
-            cb("NO RESULT", undefined, undefined);
-        })
-        .catch((err)=>{
-            cb(err, undefined, undefined);
-        });
+        }
+    });
 };

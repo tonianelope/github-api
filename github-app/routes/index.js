@@ -6,26 +6,24 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next)=> {
-  res.render('index', { title: 'Github Visual' });
+    res.render('index', { title: 'Github Visual' });
 });
 
-router.post('/repo', scraper.get_repo, (req, res)=>{
-    res.redirect('/load');
-});
+router.post('/repo', scraper.get_repo);
+
 
 router.get('/load', (req, res)=>{
     console.log(req.query.repo);
-    jsonControl.makeJSON(req.query.repo, (err)=>{
-        if(err) throw(err);
+    jsonControl.makeJSON(req.query.repo, (err) => {
+        if (err) throw(err);
         res.redirect('/map');
     })
-
 });
 
 router.get('/map', (req, res)=>{
     console.log(req.query.repo); // selected val
     //select input json!
-    res.render('worldmap');
+    res.render('worldmap', {repo: req.query.repo});
 });
 
 module.exports = router;

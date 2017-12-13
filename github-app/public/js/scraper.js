@@ -12,17 +12,21 @@ exports.get_repo = (req, res, next) => {
     var repo_name = req.body.repo;
     Repo.findOne({path: repo_name}, (err, repo) => {
         if (err) next(err); //redirect to error??
-        else if (repo) console.log("Found repo");
+        else if (repo){
+            console.log("Found repo");
+            res.redirect(`/load?repo=${encodeURIComponent(repo_name)}`);
+        }
         else {
             // Scrape Repo
             console.log(`${repo_name} not saved. getting repo ...`);
             save_repo(repo_name, (err, saved_repo) => {
                 if (err) next(err);
+                console.log("REDIRECTING");
+                req.query.repo = repo_name;
+                res.redirect(`/load?repo=${encodeURIComponent(repo_name)}`);
             });
         }
     });
-    console.log('END SCRAPE');
-    next();
 };
 
 save_repo = function (repo_name, cb) {
@@ -35,7 +39,7 @@ save_repo = function (repo_name, cb) {
     ghrepo.info((err, info, head) => {
         if (err) {
             cb(err, undefined);
-            return
+            return;
         }
         var r = new Repo({
             repo_id: info.id,
@@ -73,17 +77,18 @@ get_contributors = function(contributors, i, r, cb){
     }
     get_user(contributors[i].login, (err, user) => {
         console.log(i);
-        if (err) cb(err, undefined);
-        console.log("REF: " + user);
-        r.contributors.push({
-            contributions: contributors[i].contributions,
-            user: user
-        });
-        if(i === 0){
-            console.log("OWNER: "+user);
-            r.owner = user;
+        if (err){
+            cb(err, undefined);
+            return;
+        }else if(user){
+            console.log("REF: " + user);
+            r.contributors.push({
+                contributions: contributors[i].contributions,
+                user: user._id
+            });
+            if (i === 0)r.owner = user._id;
+            get_contributors(contributors, i+1, r, cb);
         }
-        get_contributors(contributors, i+1, r, cb);
     });
 };
 
@@ -95,9 +100,12 @@ get_user = function (user_login, cb) {
             console.log(`${user_login} in DB`);
             cb(undefined, user);
         } else
-            save_user(user_login, (new_user) => {
-                console.log("RECEIVED: " + new_user);
-                cb(undefined, new_user);
+            save_user(user_login, (err, new_user) => {
+                if(!err){
+                    console.log("RECEIVED: " + new_user);
+                    cb(undefined, new_user);
+                }
+                cb(err, undefined);
             });
     });
 };

@@ -34,7 +34,8 @@ let tooltip = d3.select("body")
 
 const URL = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/meteorite-strike-data.json"
     // All the meteorite strikes
-const repofile = "/json/repo.json";
+const repofile = "../json/repo.json";
+console.log(repofile);
 d3.json(repofile, d => {
     let mScale = d3.scaleLinear()
         .domain([0, d.max])
@@ -54,13 +55,13 @@ d3.json(repofile, d => {
         .attr("fill-opacity", 0.6)
         .attr("font-family", "Open Sans")
         .on("mouseover", d => {
-            var year = d.properties.year.split("-")[0]
+            //var year = d.properties.year.split("-")[0]
             tooltip.transition().duration(200).style("opacity", 1) // We use d3's transitions
             tooltip.html("<strong>Name: </strong>" + d.properties.name + "<br>" +
                     "<strong>Mass: </strong>" + d.properties.mass + "<br>" +
-                    "<strong>Year </strong>" + year + "<br>" +
-                    "<strong>Fall: </strong>" + d.properties.fall + "<br>" +
-                    "<strong>Class: </strong>" + d.properties.recclass)
+                    //"<strong>Year </strong>" + year + "<br>" +
+                    //"<strong>Fall: </strong>" + d.properties.fall + "<br>" +
+                    "<strong>Location: </strong>" + d.properties.city)
                 .style("left", (d3.event.pageX + 2) + "px").style("top", (d3.event.pageY) + "px")
         })
         .on("mouseout", () => {
