@@ -1,5 +1,6 @@
 body {
     padding: 0px;
+    /*background-color: #404040;*/
 }
 
 svg {
@@ -8,6 +9,7 @@ svg {
 }
 
 .land {
+    /*fill: #fff;*/
     fill: #222;
 }
 

@@ -11,10 +11,11 @@
           <li><a href="/user/profile" >Profile</a></li>
           <li><a href="/map" >Map</a></li>
           <li><a href="/about" >About</a></li>
+          {{#if loggedin}}
+              <li><a href="/user/logout">Log out</a></li>
+          {{/if}}
       </ul>
   </nav>
-   <div>
     {{{body}}}
-   </div>
   </body>
 </html>

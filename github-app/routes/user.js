@@ -10,6 +10,14 @@ var auth = github.auth.config({
     webUrl: 'https://github.com/'
 });
 
+
+var authenticated = function (req, res, next) {
+    if(process.env.GITHUB_TOKEN){
+        return next();
+    }
+    res.redirect('login');
+};
+
 var auth_url = auth.login(['user', 'repo']); // and gist for read write access
 
 // Store info to verify against CSRF
@@ -46,7 +54,7 @@ router.get('/auth', (req, res)=>{
     }
 });
 
-router.get('/profile', (req, res)=>{
+router.get('/profile', authenticated, (req, res)=>{
     //check if client
     var ghme = client.me();
     ghme.info((err, info, head)=>{
@@ -73,7 +81,9 @@ router.get('/profile', (req, res)=>{
     });
 });
 
-
+router.get('/logout', (req, res)=>{
+    auth.revoke();
+});
 
 module.exports = {
     router:router,

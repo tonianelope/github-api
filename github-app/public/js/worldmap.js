@@ -51,17 +51,17 @@ d3.json(repofile, d => {
         .attr("r", d => {
             return Math.round(mScale((d.properties.mass)))
         })
-        .attr("fill", "#52ce94")//randomColor())
-        .attr("fill-opacity", 0.6)
+        .attr("fill", randomColor())
+        .attr("fill-opacity", 0.45)
         .attr("font-family", "Open Sans")
         .on("mouseover", d => {
             //var year = d.properties.year.split("-")[0]
             tooltip.transition().duration(200).style("opacity", 1) // We use d3's transitions
-            tooltip.html("<strong>Name: </strong>" + d.properties.name + "<br>" +
-                    "<strong>Mass: </strong>" + d.properties.mass + "<br>" +
-                    //"<strong>Year </strong>" + year + "<br>" +
-                    //"<strong>Fall: </strong>" + d.properties.fall + "<br>" +
-                    "<strong>Location: </strong>" + d.properties.city)
+            tooltip.html(
+                "<strong>Login: </strong>" + d.properties.login + "<br>" +
+                "<strong>Name: </strong>" + d.properties.name + "<br>" +
+                "<strong>Contributions: </strong>" + d.properties.mass + "<br>" +
+                "<strong>Location: </strong>" + d.properties.city)
                 .style("left", (d3.event.pageX + 2) + "px").style("top", (d3.event.pageY) + "px")
         })
         .on("mouseout", () => {

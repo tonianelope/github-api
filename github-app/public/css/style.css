@@ -2,8 +2,8 @@ body {
   padding: 0;
   margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #404040;
-  color: #ffffff;
+  /*background-color: #404040;*/
+  color: #141414;
 }
 
 a {
@@ -49,9 +49,8 @@ nav > ul > li > a {
 .snip1336 {
   font-family: 'Roboto', Arial, sans-serif;
   position: center;/* relative; */
-  float: center;
   overflow: hidden;
-  margin: 10px 1%;
+  margin: 10px 30%;
   min-width: 230px;
   max-width: 515px;
   width: 100%;
