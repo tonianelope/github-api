@@ -1,18 +1,15 @@
 var request = require('request');
 
-var locations = ["United Kingdom",  "Berlin, Germany", "err"];
+var locations = ["Prague"];
 
-var options = {
-    hostname: 'nominatim.openstreetmap.org',
-    path: '/serach',
-
-};
 
 for(var i = 0; i<locations.length; i++){
-    var gecodeURL = `http://nominatim.openstreetmap.org/search?format=json&q=${locations[i]}`;
+    var gecodeURL = `http://nominatim.openstreetmap.org/search?format=html&accept-language=en&q=${locations[i]}`;
 
     request.get(gecodeURL, (err, res, body)=>{
-        console.log(res);
+        //console.log(res);
+
+        //nominatim_results
         console.log();
         console.log(body);
     });
