@@ -1,6 +1,6 @@
-var User = require('../../models/user');
+//var User = require('../../models/user');
 var Repo = require('../../models/repo');
-var Commit = require('../../models/commit');
+//var Commit = require('../../models/commit');
 
 var request = require('request');
 var fs = require("fs");
@@ -13,6 +13,12 @@ var fs = require("fs");
 //     options: { limit: 5 }
 // }).
 // exec()
+
+exports.all_repos = (cb) =>{
+    Repo.find((err, result)=>{
+        return cb(result);
+    });
+};
 
 exports.makeJSON = (repo_name, cb) => {
     var map_data = {

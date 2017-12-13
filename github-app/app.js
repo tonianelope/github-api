@@ -71,6 +71,4 @@ hbs.registerHelper('if', function(conditional, options) {
     }
 });
 
-
-
 module.exports = app;

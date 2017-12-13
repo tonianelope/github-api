@@ -6,8 +6,11 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next)=> {
-    res.render('index', { title: 'Github Visual' });
+    jsonControl.all_repos((repos)=>{
+        res.render('index', { title: 'Github Visual', repos: repos});
+    });
 });
+
 
 router.post('/repo', scraper.get_repo);
 
