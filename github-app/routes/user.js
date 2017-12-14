@@ -57,14 +57,15 @@ router.get('/auth', (req, res)=>{
     }
 });
 
-router.get('/profile', authenticated, scraper.get_profile, (req, res)=>{
+router.get('/profile', authenticated, scraper.get_all_files,
+ (req, res)=>{
     //check if client
-        console.log(res.info);
-        console.log(res.langs);
+        //console.log(res.info);
+        //console.log(res.langs);
         res.render('profile.hbs', {
-            //user: info.login,
-            //user_image: info.avatar_url,
-            //github: info.html_url,
+            user: "test2",
+            user_image: 'https://avatars0.githubusercontent.com/u/23743176?v=4',
+            github: "/profile",//info.html_url,
             repos: []
         });
 });

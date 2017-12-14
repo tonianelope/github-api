@@ -1,3 +1,47 @@
+/*body {*/
+  /*position: relative;*/
+  /*margin-left:15px;*/
+  /*background-color:#eee;*/
+/*}*/
+#circleBar-web-text,
+#circleBar-mobile-text{
+  font-family: 'FranklinGothic-Book' "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+  font-size:16px;
+  fill:#000;
+}
+#circleBar-web-labels tspan,
+#circleBar-mobile-labels tspan {
+  font-family: 'FranklinGothic-Book' "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+  font-size:10px;
+  fill:#6D6E71;
+}
+
+#circleBar-web-values tspan,
+#circleBar-mobile-values tspan {
+  font-family: 'FranklinGothic-Book' "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+  font-size: 9px;
+  font-weight:bold;
+  fill:#000;
+}
+#circleBar-web-values tspan {
+  fill: #7D3A4D;
+}
+#circleBar-mobile-values tspan {
+  fill: #684E88;
+}
+
+.Row
+{
+  display: table;
+  width: 100%; /*Optional*/
+  table-layout: fixed; /*Optional*/
+  border-spacing: 10px; /*Optional*/
+}
+.Column
+{
+  display: table-cell;
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -11,7 +55,7 @@ a {
 }
 
 section{
-  width: 500;
+  width: 500px;
   float: left;
   padding: 10px;
   margin: 10px;
@@ -66,16 +110,16 @@ nav > ul > li > a {
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,600);
 .snip1336 {
   font-family: 'Roboto', Arial, sans-serif;
-  position: center;/* relative; */
+  position: relative;
   overflow: hidden;
-  margin: 10px 30%;
+  margin: 10px 1%;
   min-width: 230px;
-  max-width: 515px;
+  max-width: 415px;
   width: 100%;
-  color: #ffffff;
+  color: #000000;
   text-align: left;
   line-height: 1.4em;
-  background-color: #141414;
+  background-color: #ffffff;
 }
 .snip1336 * {
   -webkit-box-sizing: border-box;
@@ -83,14 +127,18 @@ nav > ul > li > a {
   -webkit-transition: all 0.25s ease;
   transition: all 0.25s ease;
 }
+
 .snip1336 img {
-  max-width: 100%;
-  vertical-align: top;
+   display:inline-block;
+   vertical-align: middle;
+
+   max-width: 100%;
+  /*/vertical-align: top;*/
   opacity: 0.85;
 }
 .snip1336 figcaption {
   width: 100%;
-  background-color: #141414;
+  background-color: #ffffff;
   padding: 25px;
   position: relative;
 }
@@ -103,12 +151,12 @@ nav > ul > li > a {
   height: 0;
   border-style: solid;
   border-width: 55px 0 0 400px;
-  border-color: transparent transparent transparent #141414;
+  border-color: transparent transparent transparent #ffffff;
 }
 .snip1336 figcaption a {
   padding: 5px;
-  border: 1px solid #ffffff;
-  color: #ffffff;
+  border: 1px solid #000000;
+  color: #000000;
   font-size: 0.7em;
   text-transform: uppercase;
   margin: 10px 0;
@@ -131,7 +179,7 @@ nav > ul > li > a {
   z-index: 1;
   max-width: 90px;
   opacity: 1;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(54, 161, 255, 0.3);
 }
 .snip1336 .follow {
   margin-right: 4%;
@@ -160,6 +208,10 @@ figure {
   /*margin-bottom: 1em;*/
   margin-left: 300px;
   margin-right: 300px;
+}
+
+svg {
+  right: 10px;
 }
 
 th {
