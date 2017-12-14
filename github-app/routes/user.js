@@ -47,7 +47,7 @@ router.get('/auth', (req, res)=>{
         console.log("ERROR");
     } else {
         github.auth.login(req.query.code, function (err, token, headers) {
-            //res.writeHead(200, {'Content-Type': 'text/plain'});
+            console.log(headers);
             client = github.client(token);
             process.env['GITHUB_TOKEN'] = token;
             console.log("CLIENT INITIALISED");
@@ -59,28 +59,14 @@ router.get('/auth', (req, res)=>{
 
 router.get('/profile', authenticated, scraper.get_profile, (req, res)=>{
     //check if client
-
-
-        // ghme.repos((err1, repos)=>{
-        //     if(err1) throw err1;
-        //     console.log(repos);
-        //
-        //     res.render('profile.hbs', {
-        //         user: info.login,
-        //         user_image: info.avatar_url,
-        //         github: info.html_url,
-        //         repos: repos
-        //     });
-        // });
+        console.log(res.info);
+        console.log(res.langs);
         res.render('profile.hbs', {
-                    user: info.login,
-                    user_image: info.avatar_url,
-                    github: info.html_url,
-                    repos: []
-                });
-
-router.get('/logout', (req, res)=>{
-    auth.revoke();
+            //user: info.login,
+            //user_image: info.avatar_url,
+            //github: info.html_url,
+            repos: []
+        });
 });
 
 module.exports = {

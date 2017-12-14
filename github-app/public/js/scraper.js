@@ -134,7 +134,6 @@ save_user = function (user_login, cb) {
     });
 };
 
-
 //test db funtion
 exports.insert_user = (req, res, next) => {
     var u = new User({
@@ -150,4 +149,59 @@ exports.insert_user = (req, res, next) => {
     });
     //cb(null, u);
     res.send(u);
+};
+
+
+exports.get_profile = (req, res, next) => {
+    //TODO make functoin??
+    if(process.env.GITHUB_TOKEN){
+        client = github.client(process.env.GITHUB_TOKEN);
+        console.log("REPO CLIENT: "+client);
+    }
+    ghme = client.me();
+    ghme.info((err, info)=>{
+        if(!err){
+            res.info = info;
+        }else{
+            next(err);
+        }
+    });
+
+    ghme.repos((err, repos)=>{
+            if(!err){
+                //get languages for all repos
+                get_lang(repos, 0, {}, (err, langs) =>{
+                    console.log(langs);
+                    res.langs = langs;
+                    next();
+                });
+            }
+            else{
+                next(err);
+            }
+        });
+};
+
+
+var get_lang = function(repos, i, langs, cb){
+
+    if(i < repos.length){
+        ghrepo = client.repo(repos[i].full_name);
+        ghrepo.languages((err, repo_langs, head) =>{
+            if(!err){
+                console.log(langs);
+                for(var key in repo_langs){
+                    if(langs[key]) langs[key] += repo_langs[key];
+                    else langs[key] = repo_langs[key];
+                }
+                get_lang(repos, i+1, langs, cb);
+            }else{
+                cb(err, undefined);
+            }
+        })
+    }else{
+        cb(undefined, langs);
+    }
+
+
 };
