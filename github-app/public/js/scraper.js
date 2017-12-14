@@ -231,69 +231,15 @@ var get_lang = function (repos, i, langs, cb) {
 
 };
 
-var save_content = function (conts, i, files, cb) {
-        console.log(i + " " + conts.length);
-        if (i < conts.length) {
-            var dot = conts[i].name.indexOf(".");
-            if (conts[i].size === 0 && dot === -1) {
-                get_content(conts[i].path, files, (err, sub_files) => {
-                    if (err) {
-                        console.log(err);
-                    }else {
-                        console.log(files.length + "-"+sub_files.length);
-                        files.push.apply(files, sub_files);
-                        save_content(conts, i + 1, files, cb);
-                    }
-                });
-            } else {
-                if (dot !== -1 && dot !== 0 && conts[i].size !== 0) {
-                    //add to files
-                    console.log('saving' + conts[i].name);
-                    files.push({
-                        "name": conts[i].path,
-                        "size": conts[i].size,
-                        "repo": 'pksunkara/octonode',
-                        "url": conts[i].html_url
-                    });
-                }
-                save_content(conts, i + 1, files, cb);
-            }
 
-        }
-        else {
-            console.log("return");
-            cb(undefined, files);
-            return;
-        }
-    }
-;
-
-var save_file = function (file, cb) {
-    var dot = file.name.indexOf(".");
-    if (file.size === 0 && dot === -1) {
-        get_content(file.path, files, cb);
-    } else {
-        if (dot !== -1 && dot !== 0 && file.size !== 0) {
-            //add to files
-            console.log('saving' + file.name);
-            files.push({
-                "name": file.path,
-                "size": file.size,
-                "repo": 'pksunkara/octonode',
-                "url": file.html_url
-            });
-        }
-    }
-};
-
-var get_content = function (path, files, cb) {
-    console.log("getting" + path);
+var get_content = function (path, repo_name, cb) {
+    console.log("getting" + path + " in "+ repo_name);
     var file;
     ghrepo.contents(path, 'master', (err, conts, head) => {
-        async.each(conts, (file, cb)=>{
+        async.each(conts, (file, cb) => {
             var dot = file.name.indexOf(".");
             if (file.size === 0 && dot === -1) {
-                get_content(file.path, files, cb);
+                get_content(file.path, repo_name, cb);
             } else {
                 if (dot !== -1 && dot !== 0 && file.size !== 0) {
                     //add to files
@@ -301,65 +247,71 @@ var get_content = function (path, files, cb) {
                     files.push({
                         "name": file.path,
                         "size": file.size,
-                        "repo": 'pksunkara/octonode',
+                        "repo":  repo_name,
                         "url": file.html_url
                     });
                 }
                 cb();
             }
-        }, (err)=>{
-            cb(undefined, files);
+        }, (err) => {
+            cb(undefined);
         });
+    });
+};
 
-
-
-        // if (conts) {
-        //     save_content(conts, 0, files, (err, sub_files) => {
-        //         if (!err) {
-        //             console.log("SAVED PATH " + path);
-        //             console.log(files.length + "-"+sub_files.length);
-        //             files.push.apply(files, sub_files);
-        //             cb(undefined, files);
-        //         } else {
-        //             console.log(err);
-        //             cb(undefined, files);
-        //         }
-        //
-        //     });
-        // } else {
-        //     cb(err, undefined);
-        // }
+var for_all_repos = function (ghme, callback) {
+    ghme.repos((err, repos) => {
+        var repo;
+        async.each(repos, (repo, cb) => {
+            console.log(repo.full_name);
+            ghrepo = client.repo(repo.full_name);
+            get_content('', repo.full_name, (err) => {
+                if (!err) {
+                    console.log("RECIEVED");
+                    cb();
+                } else {
+                    cb(err);
+                }
+            });
+        }, (err) => {
+            console.log(files);
+            callback(err);
+        });
     });
 };
 
 var files;
+
 exports.get_all_files = function (res, req, next) {
     if (process.env.GITHUB_TOKEN) {
         client = github.client(process.env.GITHUB_TOKEN);
         console.log("REPO CLIENT: " + client);
     }
     files = [];
-    ghrepo = client.repo('pksunkara/octonode');
-    get_content('', files, (err, all_files) => {
-        if (!err) {
-            console.log("RECIEVED");
-            if (!err) {
-                fs.writeFile(`public/json/files.json`, JSON.stringify(all_files), (err) => {
-                    if (!err) {
-                        console.log("Wrote file");
-                        //res.files = langs;
-                        next();
-                    } else {
-                        next(err);
-                    }
 
-                });
-            } else {
-                next(err);
-            }
+    ghme = client.me();
+    ghme.info((err, info) => {
+        if (!err) {
+            res.info = info;
         } else {
             next(err);
         }
-
     });
+
+    for_all_repos(ghme, (err)=>{
+        if (!err) {
+            fs.writeFile(`public/json/files.json`, JSON.stringify(files), (err) => {
+                if (!err) {
+                    console.log("Wrote file");
+                    //res.files = langs;
+                    next();
+                } else {
+                    next(err);
+                }
+            });
+        } else {
+            next(err);
+        }
+    });
+
 };
