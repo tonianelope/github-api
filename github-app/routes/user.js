@@ -1,5 +1,7 @@
 var express = require('express');
 var github = require('octonode');
+var scraper = require('../public/js/scraper');
+
 var router = express.Router();
 
 /* Configure github oath */
@@ -12,10 +14,11 @@ var auth = github.auth.config({
 
 
 var authenticated = function (req, res, next) {
+    console.log("AUTH: "+process.env.GITHUB_TOKEN);
     if(process.env.GITHUB_TOKEN){
         return next();
     }
-    res.redirect('login');
+    res.redirect('/?e=' + encodeURIComponent('Please login to access!'));
 };
 
 var auth_url = auth.login(['user', 'repo']); // and gist for read write access
@@ -54,12 +57,9 @@ router.get('/auth', (req, res)=>{
     }
 });
 
-router.get('/profile', authenticated, (req, res)=>{
+router.get('/profile', authenticated, scraper.get_profile, (req, res)=>{
     //check if client
-    var ghme = client.me();
-    ghme.info((err, info, head)=>{
-        if(err) throw err;
-        console.log(head);
+
 
         // ghme.repos((err1, repos)=>{
         //     if(err1) throw err1;
@@ -78,8 +78,6 @@ router.get('/profile', authenticated, (req, res)=>{
                     github: info.html_url,
                     repos: []
                 });
-    });
-});
 
 router.get('/logout', (req, res)=>{
     auth.revoke();

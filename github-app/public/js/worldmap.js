@@ -51,8 +51,8 @@ d3.json(repofile, d => {
         .attr("r", d => {
             return Math.round(mScale((d.properties.mass)))
         })
-        .attr("fill", randomColor())
-        .attr("fill-opacity", 0.45)
+        .attr("fill", '#36a1ff')
+        .attr("fill-opacity", 0.5)
         .attr("font-family", "Open Sans")
         .on("mouseover", d => {
             //var year = d.properties.year.split("-")[0]

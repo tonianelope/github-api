@@ -10,10 +10,25 @@ a {
   color: #00B7FF;
 }
 
-div {
+section{
+  width: 500;
+  float: left;
   padding: 10px;
   margin: 10px;
+  /*margin: 0;*/
+  /*padding: 0;*/
+  display: inline;
 }
+
+/*nav{*/
+  /*background-color: #333;*/
+  /*width: 150px;*/
+  /*float: left;*/
+  /*display: inline;*/
+  /*margin: 0;*/
+  /*padding: 0;*/
+  /*margin-right: 10px;*/
+/*}*/
 
 nav {
   background-color: #333;
@@ -44,6 +59,9 @@ nav > ul > li > a {
   text-decoration: none;
 }
 
+.error {
+  color: #f5000b;
+}
 
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,600);
 .snip1336 {

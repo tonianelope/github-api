@@ -3,9 +3,21 @@ body {
     /*background-color: #404040;*/
 }
 
+/*svg {*/
+    /*display: block;*/
+    /*margin: auto;*/
+/*}*/
+
+nav{
+    display: none;
+}
+
 svg {
     display: block;
-    margin: auto;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0
 }
 
 .land {
@@ -36,6 +48,18 @@ svg {
 .title {
     position: absolute;
     left: 10px;
+    bottom: 10px;
+    background-color: rgba(54, 173, 217, 0.8);
+    border-radius: 5px;
+    font-family: Roboto;
+    color: white;
+    padding: 10px;
+}
+
+.link {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
     background-color: rgba(54, 173, 217, 0.8);
     border-radius: 5px;
     font-family: Roboto;

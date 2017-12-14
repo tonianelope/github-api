@@ -1,9 +1,13 @@
-<div>
+<section>
 <h1>Github Visualisation</h1>
+
+    {{#if error}}
+        <h2 class="error">{{error}}</h2>
+    {{/if}}
 
     <div>
     {{#if login}}
-        <inpu name="like" id="like" value="Login to Github" type="submit" onclick="location.href = '/user/login';"/>
+        <input name="like" id="like" value="Login to Github" type="button" onclick="location.href = '/user/login';"/>
     {{/if}}
     </div>
 
@@ -11,7 +15,7 @@
         <p>Enter a repo to pull (owner/reponame):</p>
     <form action="/repo"  method="post">
     Repo Name: <input type="text" name="repo" value=""><br>
-    <input type="submit" value="Submit">
+    <!--<input type="submit" value="Submit">-->
     </form>
     </div>
 
@@ -27,4 +31,4 @@
     </form>
     </div>
 
-</div>
+</section>
