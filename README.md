@@ -38,4 +38,11 @@ Hovering over the bar shows the file path, size and at the bottom the repo that 
 
 The user can logout with a button at the right top.
 
+# Run it yourself
 
+All you need is npm and node and a mongodb instance.
+Register your own github app for the authentication and set the envirnment variables CLIENT\_ID, CLIENT_SECRET and MONGODB\_URI.
+
+# Playground
+
+Trying out the github api and different libraries for it
