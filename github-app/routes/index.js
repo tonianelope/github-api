@@ -20,7 +20,7 @@ router.get('/', (req, res, next)=> {
     });
 });
 
-/* GET repo details*/
+/* GET repo details */
 router.post('/repo', scraper.get_repo);
 
 /* LOAD repo*/
@@ -37,7 +37,6 @@ router.get('/load', (req, res, next)=>{
 
 /* MAP the data*/
 router.get('/map', (req, res)=>{
-    //select input json?
     res.render('worldmap', {repo: req.query.repo});
 });
 

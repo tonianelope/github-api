@@ -5,8 +5,8 @@ var github = require('octonode');
 var fs = require('fs');
 var async = require('async');
 
-//move!!!
 var client = github.client();
+
 
 exports.get_repo = (req, res, next) => {
     // Check if repo in DB
@@ -14,11 +14,12 @@ exports.get_repo = (req, res, next) => {
     Repo.findOne({path: repo_name}, (err, repo) => {
         if (err) next(err); //redirect to error??
         else if (repo) {
+            // If found load
             console.log("Found repo");
             res.redirect(`/load?repo=${encodeURIComponent(repo_name)}`);
         }
         else {
-            // Scrape Repo
+            // Else Scrape Repo - load
             console.log(`${repo_name} not saved. getting repo ...`);
             save_repo(repo_name, (err, saved_repo) => {
                 if (err) next(err);
@@ -30,13 +31,13 @@ exports.get_repo = (req, res, next) => {
     });
 };
 
+// Save repo in db
 save_repo = function (repo_name, cb) {
-
     if (process.env.GITHUB_TOKEN) {
         client = github.client(process.env.GITHUB_TOKEN);
-        console.log("REPO CLIENT: " + client);
     }
     var ghrepo = client.repo(repo_name);
+    //get repo info
     ghrepo.info((err, info, head) => {
         if (err) {
             cb(err, undefined);
@@ -50,18 +51,17 @@ save_repo = function (repo_name, cb) {
             contributors: []
         });
 
+        // get all contributors
         ghrepo.contributors((err, contributors, head) => {
             console.log(head);
             if (err) throw err;
             else {
+                // for each get contributor info
                 get_contributors(contributors, 0, r, function (err, new_r) {
                     if (err) cb(err, undefined);
-                    console.log("END OF LOOP");
-
                     new_r.save((err) => {
                         if (err) cb(err, undefined);
-                        console.log("New repo: " + r);
-                        cb(undefined, r);
+                        else cb(undefined, r);
                     });
                 });
 
@@ -71,7 +71,9 @@ save_repo = function (repo_name, cb) {
     });
 };
 
+// add contributions and reference to user to repo for all contributors
 get_contributors = function (contributors, i, r, cb) {
+    // return if all contributors saved/added
     if (i >= contributors.length) {
         cb(undefined, r);
         return;
@@ -88,6 +90,7 @@ get_contributors = function (contributors, i, r, cb) {
                 user: user._id
             });
             if (i === 0) r.owner = user._id;
+            // do the same for next contributor
             get_contributors(contributors, i + 1, r, cb);
         }
     });
@@ -95,12 +98,13 @@ get_contributors = function (contributors, i, r, cb) {
 
 get_user = function (user_login, cb) {
     console.log("Looking for " + user_login);
+    // check if user in db
     User.findOne({login: user_login}, (err, user) => {
         if (err) cb(err, undefined);
         else if (user) {
             console.log(`${user_login} in DB`);
             cb(undefined, user);
-        } else
+        } else // else save user into db
             save_user(user_login, (err, new_user) => {
                 if (!err) {
                     console.log("RECEIVED: " + new_user);
@@ -111,6 +115,7 @@ get_user = function (user_login, cb) {
     });
 };
 
+// save user in db
 save_user = function (user_login, cb) {
     console.log(`Saving ${user_login}`);
     var ghuser = client.user(user_login);
@@ -135,7 +140,7 @@ save_user = function (user_login, cb) {
     });
 };
 
-//test db funtion
+//test insert to db
 exports.insert_user = (req, res, next) => {
     var u = new User({
         user_id: 1,
@@ -154,12 +159,12 @@ exports.insert_user = (req, res, next) => {
 
 
 exports.get_profile = (req, res, next) => {
-    //TODO make functoin??
     if (process.env.GITHUB_TOKEN) {
         client = github.client(process.env.GITHUB_TOKEN);
         console.log("REPO CLIENT: " + client);
     }
     ghme = client.me();
+    //get personal info
     ghme.info((err, info) => {
         if (!err) {
             res.info = info;
@@ -168,6 +173,7 @@ exports.get_profile = (req, res, next) => {
         }
     });
 
+    // get all repos
     ghme.repos((err, repos) => {
         if (!err) {
             //get languages for all repos
@@ -207,7 +213,7 @@ exports.get_profile = (req, res, next) => {
     });
 };
 
-
+// add languages from repo to langs obj
 var get_lang = function (repos, i, langs, cb) {
 
     if (i < repos.length) {
@@ -232,21 +238,24 @@ var get_lang = function (repos, i, langs, cb) {
 };
 
 
+// get content for REPO_NAME at PATH
 var get_content = function (ghrepo, path, repo_name, callback) {
     console.log("getting" + path + " in " + repo_name);
     var file;
     ghrepo.contents(path, 'master', (err, conts, head) => {
         if (!err) {
+            // for all contents:
             async.each(conts, (file, cb) => {
                 console.log(file);
+                // if file get contents of it
                 if (file.type === 'dir') {
                     console.log("FOLDER " + file.name);
                     get_content(ghrepo, file.path, repo_name, cb);
+                // else add file to list
                 } else {
                     var dot = file.name.indexOf(".");
-                    //FILES TO IGNORE: images & apks language=JSRegexp
-                    if (dot !== -1 && dot !== 0 && file.size !== 0 && !file.name.match(/.(jpg|jpeg|png|gif|apk|jar|pdf)$/i)) {
-                        //add to files
+                    //FILES TO IGNORE: images & apks and .something files
+                    if (dot !== -1 && dot !== 0 && file.size !== 0 && !file.name.match(/.(jpg|jpeg|png|gif|apk|jar)$/i)) {
                         console.log('FILE ' + file.name);
                         files.push({
                             "name": file.path,
@@ -264,18 +273,20 @@ var get_content = function (ghrepo, path, repo_name, callback) {
                 console.log("RETURNING " + repo_name);
                 callback(undefined);
             });
-        }else{
-            console.log(repo_name+" "+path+" "+err);
+        } else {
+            // returns after all contents are collected
+            console.log(repo_name + " " + path + " " + err);
             callback(undefined);
         }
     });
 };
 
+// get content for repos
 var for_all_repos = function (repos, callback) {
     var repo;
     console.log(repo);
     async.each(repos, (repo, cb) => {
-        console.log("GETTIN REPO "+repo.full_name);
+        console.log("GETTING REPO " + repo.full_name);
         ghrepo = client.repo(repo.full_name);
         get_content(ghrepo, '', repo.full_name, (err) => {
             if (!err) {
@@ -300,6 +311,7 @@ exports.get_all_files = function (req, res, next) {
     }
     files = [];
 
+    // get info and all repos in parallel
     ghme = client.me();
     async.parallel({
         infos: (cb) => {
@@ -314,9 +326,9 @@ exports.get_all_files = function (req, res, next) {
         allrepos: (cb) => {
             ghme.repos((err, repos) => {
                 if (!err) {
+                    // get files for all repos
                     for_all_repos(repos, (err) => {
                         if (!err) {
-                            console.log("AT R");
                             cb(undefined, repos);
                         } else {
                             cb(err, undefined);
@@ -329,7 +341,6 @@ exports.get_all_files = function (req, res, next) {
         }
         //Callback executes after all calls finish or one fails
     }, (err, resluts) => {
-        console.log("AT AS");
         if (err) {
             next(err);
         } else {
@@ -345,25 +356,4 @@ exports.get_all_files = function (req, res, next) {
             });
         }
     });
-};
-
-exports.filter = (req, res, next)=> {
-    if(req.query === {}){
-        console.log("FILTER ");
-        console.log(JSON.stringify(req.query));
-        var data = JSON.parse(fs.readFileSync('github-app/public/json/files.json', 'utf8'));
-        var filtered_data = data.filter(function (element) {
-            return element.repo === req.query.repo;
-        });
-        fs.writeFile(`github-app/public/json/files.json`, JSON.stringify(filtered_data), (err) => {
-            if (!err) {
-                console.log("Wrote file");
-                next();
-            } else {
-                next(err);
-            }
-        });
-    }else{
-        next();
-    }
 };

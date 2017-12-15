@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var hbs = require('hbs');
 
 var index = require('./routes/index');
-var user = require('./routes/user').router;
+var user = require('./routes/user');
 
 var app = express();
 
@@ -54,6 +54,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+//Register Handelbars helpers
 hbs.registerHelper('list', function(context, options) {
     var ret = "<ul>";
 

@@ -12,7 +12,13 @@ var auth = github.auth.config({
     webUrl: 'https://github.com/'
 });
 
+var auth_url = auth.login(['user', 'repo']); // and gist for read write access
 
+// Store info to verify against CSRF
+var state = auth_url.match(/&state=([0-9a-z]{32})/i);
+var client;
+
+/* CHECK if user is autheticated - else promt to login */
 var authenticated = function (req, res, next) {
     console.log("AUTH: " + process.env.GITHUB_TOKEN);
     if (process.env.GITHUB_TOKEN) {
@@ -21,17 +27,6 @@ var authenticated = function (req, res, next) {
     res.redirect('/?e=' + encodeURIComponent('Please login to access!'));
 };
 
-var auth_url = auth.login(['user', 'repo']); // and gist for read write access
-
-// Store info to verify against CSRF
-var state = auth_url.match(/&state=([0-9a-z]{32})/i);
-var client;
-
-/* GET user listing. */
-router.get('/', function (req, res, next) {
-    res.send('respond with a resource');
-});
-
 /* Redirect user to github login*/
 router.get('/login', (req, res) => {
     //var uri = url.parse(req.url);
@@ -39,6 +34,7 @@ router.get('/login', (req, res) => {
     res.end('Redirecting to ' + auth_url);
 });
 
+/* Callback from github - save token */
 router.get('/auth', (req, res) => {
     // Check against CSRF attacks
     if (!state || state[1] != req.query.state) {
@@ -51,14 +47,13 @@ router.get('/auth', (req, res) => {
             client = github.client(token);
             process.env['GITHUB_TOKEN'] = token;
             console.log("CLIENT INITIALISED");
-            //console.log(client);
             res.redirect('profile');
         });
     }
 });
 
-router.get('/profile', authenticated, scraper.get_all_files,
-    (req, res) => {
+/* check if user autheticated - get user data - display profile */
+router.get('/profile', authenticated, scraper.get_all_files, (req, res) => {
         console.log();
 
         res.render('profile.hbs', {
@@ -70,14 +65,10 @@ router.get('/profile', authenticated, scraper.get_all_files,
         });
     });
 
+/* clear token */
 router.get('/logout', (req, res)=>{
     process.env.GITHUB_TOKEN = "";//process.env['NOTHING'];
-    console.log("LOG: "+ process.env.GITHUB_TOKEN);
-   // res.logout = false;
     res.redirect('/');
 });
 
-module.exports = {
-    router: router,
-    client: client
-};
+module.exports = router;

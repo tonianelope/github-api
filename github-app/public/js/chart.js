@@ -27,7 +27,7 @@ function reset() {
 function visualize(filter) {
     if(filter){
         data = data.filter(function (elem) {
-            return elem.repo === filter;
+            return elem.repo !== filter;
         });
     }
 
@@ -35,7 +35,7 @@ function visualize(filter) {
     var pad = 10;
     var h = window.innerHeight - pad;
     var w = window.innerWidth - pad;
-    var size = 880;
+    var size = 780;
     var r = size / 8;
     var barWidth = w / data.length;
     var animTime = 1500;
@@ -49,7 +49,7 @@ function visualize(filter) {
     var colorScale;
     if(filter){
         colorScale = d3.scale.category20()
-            .domain(arrayFromProperty(data, "size"));
+            .domain(arrayFromProperty(data, "name"));
     }else{
         colorScale = d3.scale.category20()
             .domain(arrayFromProperty(data, "repo"));
