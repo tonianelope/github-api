@@ -331,7 +331,7 @@ exports.get_all_files = function (req, res, next) {
         } else {
             res.info = resluts.infos;
             res.repos = resluts.allrepos;
-            fs.writeFile(`public/json/files.json`, JSON.stringify(files), (err) => {
+            fs.writeFile(`github-app/public/json/files.json`, JSON.stringify(files), (err) => {
                 if (!err) {
                     console.log("Wrote file");
                     console.log(res.info);
