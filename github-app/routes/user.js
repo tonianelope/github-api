@@ -14,8 +14,8 @@ var auth = github.auth.config({
 
 
 var authenticated = function (req, res, next) {
-    console.log("AUTH: "+process.env.GITHUB_TOKEN);
-    if(process.env.GITHUB_TOKEN){
+    console.log("AUTH: " + process.env.GITHUB_TOKEN);
+    if (process.env.GITHUB_TOKEN) {
         return next();
     }
     res.redirect('/?e=' + encodeURIComponent('Please login to access!'));
@@ -28,18 +28,18 @@ var state = auth_url.match(/&state=([0-9a-z]{32})/i);
 var client;
 
 /* GET user listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/', function (req, res, next) {
+    res.send('respond with a resource');
 });
 
 /* Redirect user to github login*/
-router.get('/login', (req, res)=>{
+router.get('/login', (req, res) => {
     //var uri = url.parse(req.url);
     res.writeHead(302, {'Content-Type': 'text/plain', 'Location': auth_url});
     res.end('Redirecting to ' + auth_url);
 });
 
-router.get('/auth', (req, res)=>{
+router.get('/auth', (req, res) => {
     // Check against CSRF attacks
     if (!state || state[1] != req.query.state) {
         res.writeHead(403, {'Content-Type': 'text/plain'});
@@ -58,19 +58,20 @@ router.get('/auth', (req, res)=>{
 });
 
 router.get('/profile', authenticated, scraper.get_all_files,
- (req, res)=>{
-    //check if client
-        //console.log(res.info);
-        //console.log(res.langs);
+    (req, res) => {
+        console.log();
+        console.log();
+        console.log(res.info);
+        console.log(res.repos);
         res.render('profile.hbs', {
-            user: "test2",
-            user_image: 'https://avatars0.githubusercontent.com/u/23743176?v=4',
-            github: "/profile",//info.html_url,
-            repos: []
+            user: res.info.login,
+            user_image: res.info.avatar_url,
+            github: res.info.html_url,
+            repos: res.repos
         });
-});
+    });
 
 module.exports = {
-    router:router,
-    client:client
+    router: router,
+    client: client
 };

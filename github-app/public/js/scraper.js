@@ -232,67 +232,64 @@ var get_lang = function (repos, i, langs, cb) {
 };
 
 
-var get_content = function (ghrepo, path, repo_name, cb) {
-    console.log("getting" + path + " in "+ repo_name);
+var get_content = function (ghrepo, path, repo_name, callback) {
+    console.log("getting" + path + " in " + repo_name);
     var file;
     ghrepo.contents(path, 'master', (err, conts, head) => {
-        if(err){
-            console.log(path+"\n"+err);
-        }
+        // if (err) {
+        //     callback(err);
+        // }
         async.each(conts, (file, cb) => {
-            console.log(file.name);
             var dot = file.name.indexOf(".");
             if (file.size === 0 && dot === -1) {
-                console.log("FOLDER "+file.name);
+                console.log("FOLDER " + file.name);
                 get_content(ghrepo, file.path, repo_name, cb);
             } else {
-                //FILES TO IGNORE: images & apks
-
-                // language=JSRegexp
-                if (dot !== -1 && dot !== 0 && file.size !== 0 && !file.name.match(/.(jpg|jpeg|png|gif|apk)$/i)) {
+                //FILES TO IGNORE: images & apks language=JSRegexp
+                if (dot !== -1 && dot !== 0 && file.size !== 0 && !file.name.match(/.(jpg|jpeg|png|gif|apk|jar)$/i)) {
                     //add to files
                     console.log('FILE ' + file.name);
                     files.push({
                         "name": file.path,
                         "size": file.size,
-                        "repo":  repo_name,
+                        "repo": repo_name,
                         "url": file.html_url
                     });
-                }else{
-                    console.log("ERROR "+file.name);
+                } else {
+                    console.log("ERROR " + file.name);
                 }
                 cb();
             }
         }, (err) => {
-            cb(undefined);
+            console.log("RETURNING "+repo_name);
+            callback(undefined);
         });
     });
 };
 
-var for_all_repos = function (ghme, callback) {
-    ghme.repos((err, repos) => {
-        var repo;
-        async.each(repos, (repo, cb) => {
-            console.log(repo.full_name);
-            ghrepo = client.repo(repo.full_name);
-            get_content(ghrepo, '', repo.full_name, (err) => {
-                if (!err) {
-                    console.log("REPO RECIEVED "+repo.full_name);
-                    cb();
-                } else {
-                    cb(err);
-                }
-            });
-        }, (err) => {
-            console.log(files);
-            callback(err);
+var for_all_repos = function (repos, callback) {
+    var repo;
+    console.log(repo);
+    async.each(repos, (repo, cb) => {
+        console.log("GETTIN REPO "+repo.full_name);
+        ghrepo = client.repo(repo.full_name);
+        get_content(ghrepo, '', repo.full_name, (err) => {
+            if (!err) {
+                console.log("REPO RECIEVED " + repo.full_name);
+                cb();
+            } else {
+                cb(err);
+            }
         });
+    }, (err) => {
+        console.log("CALLBACK");
+        callback(err);
     });
 };
 
 var files;
 
-exports.get_all_files = function (res, req, next) {
+exports.get_all_files = function (req, res, next) {
     if (process.env.GITHUB_TOKEN) {
         client = github.client(process.env.GITHUB_TOKEN);
         console.log("REPO CLIENT: " + client);
@@ -300,28 +297,50 @@ exports.get_all_files = function (res, req, next) {
     files = [];
 
     ghme = client.me();
-    ghme.info((err, info) => {
-        if (!err) {
-            res.info = info;
-        } else {
-            next(err);
+    async.parallel({
+        infos: (cb) => {
+            ghme.info((err, info) => {
+                if (!err) {
+                    cb(undefined, info);
+                } else {
+                    cb(err, undefined);
+                }
+            });
+        },
+        allrepos: (cb) => {
+            ghme.repos((err, repos) => {
+                if (!err) {
+                    for_all_repos(repos, (err) => {
+                        if (!err) {
+                            console.log("AT R");
+                            cb(undefined, repos);
+                        } else {
+                            cb(err, undefined);
+                        }
+                    });
+                } else {
+                    cb(err, undefined);
+                }
+            });
         }
-    });
-
-    for_all_repos(ghme, (err)=>{
-        if (!err) {
+        //Callback executes after all calls finish or one fails
+    }, (err, resluts) => {
+        console.log("AT AS");
+        if (err) {
+            next(err);
+        } else {
+            res.info = resluts.infos;
+            res.repos = resluts.allrepos;
             fs.writeFile(`public/json/files.json`, JSON.stringify(files), (err) => {
                 if (!err) {
                     console.log("Wrote file");
-                    //res.files = langs;
+                    console.log(res.info);
+                    console.log(res.repos);
                     next();
                 } else {
                     next(err);
                 }
             });
-        } else {
-            next(err);
         }
     });
-
 };

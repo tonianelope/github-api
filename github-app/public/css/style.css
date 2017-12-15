@@ -110,9 +110,10 @@ nav > ul > li > a {
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,600);
 .snip1336 {
   font-family: 'Roboto', Arial, sans-serif;
-  position: relative;
+  /*position: relative;*/
   overflow: hidden;
-  margin: 10px 1%;
+  display: block;
+  margin: auto; /*10px 1%;*/
   min-width: 230px;
   max-width: 415px;
   width: 100%;
@@ -208,10 +209,6 @@ figure {
   /*margin-bottom: 1em;*/
   margin-left: 300px;
   margin-right: 300px;
-}
-
-svg {
-  right: 10px;
 }
 
 th {
