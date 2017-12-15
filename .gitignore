@@ -11,3 +11,11 @@
 /github-app/node_modules/arr-diff/index.js
 */node_modules/*
 */*/node_modules/*
+/*.iml
+/github-app/package-lock.json
+/github-app/.tern-port
+/github-app/public/js/.tern-port
+/github-app/routes/.tern-port
+/playground/.tern-port
+/playground/node-github/package-lock.json
+/playground/node-github/npm-debug.log
