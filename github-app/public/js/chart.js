@@ -1,7 +1,7 @@
 
 var data_url = "../json/files.json";
 var colors_url = d3.scale.category20();
-var data;
+var data, filter;
 
 console.log(colors_url);
 d3.json(data_url, loadData);
@@ -10,15 +10,27 @@ function loadData(json) {
     //data
     data = sortData(json);
 
-    visualize();
 
-    window.onresize = function () {
-        d3.select("svg").remove();
-        visualize();
-    };
+    visualize(undefined);
+
+    // window.onresize = function () {
+    //     d3.select("svg").remove();
+    //     visualize(undefined);
+    // };
 }
 
-function visualize() {
+function reset() {
+    d3.select("svg").remove();
+    d3.json(data_url, loadData);
+}
+
+function visualize(filter) {
+    if(filter){
+        data = data.filter(function (elem) {
+            return elem.repo === filter;
+        });
+    }
+
     //style
     var pad = 10;
     var h = window.innerHeight - pad;
@@ -130,7 +142,9 @@ function visualize() {
         subtitle_family.text("");
     });
     bars.on("click", function (d) {
-        window.open(d.data.url, "_blank")
+        d3.select("svg").remove();
+        visualize(d.data.repo);
+        //window.open(d.data.url, "_blank")
     });
 }
 
