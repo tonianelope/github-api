@@ -64,6 +64,16 @@ hbs.registerHelper('list', function(context, options) {
     return ret + "</ul>";
 });
 
+hbs.registerHelper('col', function(context, options) {
+    var ret = "<tr>";
+
+    for(var i=0, j=context.length; i<j; i++) {
+        ret = ret + "<td>" + options.fn(context[i]) + "</td>";
+    }
+
+    return ret + "</tr>";
+});
+
 hbs.registerHelper('if', function(conditional, options) {
     if(conditional) {
         return options.fn(this);

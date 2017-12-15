@@ -5,13 +5,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next)=> {
-    console.log(!process.env.GITHUB_TOKEN);
+    console.log(typeof(process.env.GITHUB_TOKEN));
+    var isLogin = process.env.GITHUB_TOKEN;
+    console.log(isLogin);
+    console.log(!isLogin);
     jsonControl.all_repos((repos)=>{
         res.render('index', {
             title: 'Github Visual',
             repos: repos,
-            login: !process.env.GITHUB_TOKEN,
-            logged: process.env.GITHUB_TOKEN,
+            login: !isLogin,
+            auth: isLogin,
             error: req.query.e
         });
     });

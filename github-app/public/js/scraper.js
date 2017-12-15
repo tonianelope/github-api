@@ -236,34 +236,38 @@ var get_content = function (ghrepo, path, repo_name, callback) {
     console.log("getting" + path + " in " + repo_name);
     var file;
     ghrepo.contents(path, 'master', (err, conts, head) => {
-        // if (err) {
-        //     callback(err);
-        // }
-        async.each(conts, (file, cb) => {
-            var dot = file.name.indexOf(".");
-            if (file.size === 0 && dot === -1) {
-                console.log("FOLDER " + file.name);
-                get_content(ghrepo, file.path, repo_name, cb);
-            } else {
-                //FILES TO IGNORE: images & apks language=JSRegexp
-                if (dot !== -1 && dot !== 0 && file.size !== 0 && !file.name.match(/.(jpg|jpeg|png|gif|apk|jar)$/i)) {
-                    //add to files
-                    console.log('FILE ' + file.name);
-                    files.push({
-                        "name": file.path,
-                        "size": file.size,
-                        "repo": repo_name,
-                        "url": file.html_url
-                    });
+        if (!err) {
+            async.each(conts, (file, cb) => {
+                console.log(file);
+                if (file.type === 'dir') {
+                    console.log("FOLDER " + file.name);
+                    get_content(ghrepo, file.path, repo_name, cb);
                 } else {
-                    console.log("ERROR " + file.name);
+                    var dot = file.name.indexOf(".");
+                    //FILES TO IGNORE: images & apks language=JSRegexp
+                    if (dot !== -1 && dot !== 0 && file.size !== 0 && !file.name.match(/.(jpg|jpeg|png|gif|apk|jar|pdf)$/i)) {
+                        //add to files
+                        console.log('FILE ' + file.name);
+                        files.push({
+                            "name": file.path,
+                            "size": file.size,
+                            "repo": repo_name,
+                            "url": `/user/profile/?repo=${encodeURIComponent(repo_name)}`
+                        });
+                    } else {
+                        console.log("ERROR " + file.name);
+                    }
+                    cb();
                 }
-                cb();
-            }
-        }, (err) => {
-            console.log("RETURNING "+repo_name);
+
+            }, (err) => {
+                console.log("RETURNING " + repo_name);
+                callback(undefined);
+            });
+        }else{
+            console.log(repo_name+" "+path+" "+err);
             callback(undefined);
-        });
+        }
     });
 };
 
@@ -334,8 +338,6 @@ exports.get_all_files = function (req, res, next) {
             fs.writeFile(`github-app/public/json/files.json`, JSON.stringify(files), (err) => {
                 if (!err) {
                     console.log("Wrote file");
-                    console.log(res.info);
-                    console.log(res.repos);
                     next();
                 } else {
                     next(err);
@@ -343,4 +345,25 @@ exports.get_all_files = function (req, res, next) {
             });
         }
     });
+};
+
+exports.filter = (req, res, next)=> {
+    if(req.query === {}){
+        console.log("FILTER ");
+        console.log(JSON.stringify(req.query));
+        var data = JSON.parse(fs.readFileSync('github-app/public/json/files.json', 'utf8'));
+        var filtered_data = data.filter(function (element) {
+            return element.repo === req.query.repo;
+        });
+        fs.writeFile(`github-app/public/json/files.json`, JSON.stringify(filtered_data), (err) => {
+            if (!err) {
+                console.log("Wrote file");
+                next();
+            } else {
+                next(err);
+            }
+        });
+    }else{
+        next();
+    }
 };

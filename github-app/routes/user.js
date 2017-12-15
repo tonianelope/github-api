@@ -60,16 +60,22 @@ router.get('/auth', (req, res) => {
 router.get('/profile', authenticated, scraper.get_all_files,
     (req, res) => {
         console.log();
-        console.log();
-        console.log(res.info);
-        console.log(res.repos);
+
         res.render('profile.hbs', {
             user: res.info.login,
             user_image: res.info.avatar_url,
             github: res.info.html_url,
-            repos: res.repos
+            repos: res.repos,
+            auth: process.env.GITHUB_TOKEN
         });
     });
+
+router.get('/logout', (req, res)=>{
+    process.env.GITHUB_TOKEN = "";//process.env['NOTHING'];
+    console.log("LOG: "+ process.env.GITHUB_TOKEN);
+   // res.logout = false;
+    res.redirect('/');
+});
 
 module.exports = {
     router: router,

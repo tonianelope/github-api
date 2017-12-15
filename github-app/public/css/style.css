@@ -42,6 +42,29 @@
   display: table-cell;
 }
 
+table {
+  align: center;
+  margin: 0px auto;
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 300px;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+h3{
+  display: block;
+  margin: auto;
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -73,6 +96,12 @@ section{
   /*padding: 0;*/
   /*margin-right: 10px;*/
 /*}*/
+.floatleft {
+  float:left;
+}
+.floatright {
+  float:right;
+}
 
 nav {
   background-color: #333;
@@ -85,17 +114,17 @@ nav ul{
   padding: 0;
 }
 
-nav ul li {
+nav ul div li {
   display: inline-block;
   list-style-type: none;
 }
 
-nav li:hover {
+nav div li:hover {
   background-color: #666;
 }
 
-nav > ul > li > a {
-  color: #aaa;
+nav > ul > div > li > a {
+  color: #ffffff;
   /*background-color:#FF0;*/
   display: block;
   line-height: 2em;
@@ -106,6 +135,7 @@ nav > ul > li > a {
 .error {
   color: #f5000b;
 }
+
 
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,600);
 .snip1336 {
