@@ -57,7 +57,7 @@ router.get('/auth', (req, res)=>{
     }
 });
 
-router.get('/profile', //authenticated, scraper.get_all_files,
+router.get('/profile', authenticated, scraper.get_all_files,
  (req, res)=>{
     //check if client
         //console.log(res.info);

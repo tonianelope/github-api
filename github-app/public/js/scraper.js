@@ -232,24 +232,34 @@ var get_lang = function (repos, i, langs, cb) {
 };
 
 
-var get_content = function (path, repo_name, cb) {
+var get_content = function (ghrepo, path, repo_name, cb) {
     console.log("getting" + path + " in "+ repo_name);
     var file;
     ghrepo.contents(path, 'master', (err, conts, head) => {
+        if(err){
+            console.log(path+"\n"+err);
+        }
         async.each(conts, (file, cb) => {
+            console.log(file.name);
             var dot = file.name.indexOf(".");
             if (file.size === 0 && dot === -1) {
-                get_content(file.path, repo_name, cb);
+                console.log("FOLDER "+file.name);
+                get_content(ghrepo, file.path, repo_name, cb);
             } else {
-                if (dot !== -1 && dot !== 0 && file.size !== 0) {
+                //FILES TO IGNORE: images & apks
+
+                // language=JSRegexp
+                if (dot !== -1 && dot !== 0 && file.size !== 0 && !file.name.match(/.(jpg|jpeg|png|gif|apk)$/i)) {
                     //add to files
-                    console.log('saving' + file.name);
+                    console.log('FILE ' + file.name);
                     files.push({
                         "name": file.path,
                         "size": file.size,
                         "repo":  repo_name,
                         "url": file.html_url
                     });
+                }else{
+                    console.log("ERROR "+file.name);
                 }
                 cb();
             }
@@ -265,9 +275,9 @@ var for_all_repos = function (ghme, callback) {
         async.each(repos, (repo, cb) => {
             console.log(repo.full_name);
             ghrepo = client.repo(repo.full_name);
-            get_content('', repo.full_name, (err) => {
+            get_content(ghrepo, '', repo.full_name, (err) => {
                 if (!err) {
-                    console.log("RECIEVED");
+                    console.log("REPO RECIEVED "+repo.full_name);
                     cb();
                 } else {
                     cb(err);
