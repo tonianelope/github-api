@@ -6,10 +6,14 @@
         <figcaption>
         <img src="http://img01.deviantart.net/b355/i/2011/178/a/f/octocat_by_rstovall-d3k6a7n.jpg" alt="profile-sample4" class="profile" />
         <h2>{{user}}<span>{{name}}</span></h2>
-            <!--{{#list repos}}-->
-        <!--<p> {{name}} - Owner:{{owner.login}} ({{#if private}} private {{else}} public {{/if}})</p>-->
-            <!--{{/list}}-->
-        <p>Hover over the bar to see file information</p>
+
+            <p>Welcome {{name}}, to Github Visualisation</p>
+            <p>The graph shows a breakdown of all the files in your repositories</p>
+            <p>Maybe you'll spot a surprisingly big file</p>
+            <p>Note: jpeg, phg, jar, apg and gif files are excluded</p>
+        <p>Hover over a bar to see file information</p>
+            <p>Click a bar to remove the repository from the graph</p>
+            <p>Click a repository name in the table to see the breakdown for that repository only</p>
         <!--<a href="#" class="follow">Follow</a>-->
         <!--<a href="/" class="info">Home screen</a>-->
         </figcaption>
@@ -24,7 +28,7 @@
         </tr>
         {{#each repos}}
             <tr>
-                <th>{{name}}</th>
+                <th class="link" onclick="filterRepo('{{full_name}}')">{{name}}</th>
                 <th>{{owner.login}}</th>
                 <th>{{#if private}} private {{else}} public {{/if}}</th>
             </tr>

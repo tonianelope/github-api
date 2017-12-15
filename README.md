@@ -24,6 +24,9 @@ Entering an invalid repo will redirect to the home screen.
 
 Selecting a saved repo loads the data straight from the database into the json and displays it.
 
+#### clicking the map tab
+
+will repload the last displayed repo
 
 ## The Profile
 

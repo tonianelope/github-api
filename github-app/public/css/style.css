@@ -32,6 +32,10 @@ td, th {
   padding: 8px;
 }
 
+.link:hover {
+  color: #36a1ff;
+}
+
 tr:nth-child(even) {
   background-color: #dddddd;
 }
@@ -212,6 +216,3 @@ figure {
   margin-right: 300px;
 }
 
-th {
-  text-align: left;
-}

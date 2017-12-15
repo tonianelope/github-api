@@ -6,11 +6,17 @@
     {{/if}}
 
     <div>
+        <p>Login to see a breakdown of your repositories</p>
+    </div>
+    <div>
     {{#if login}}
         <input value="Login to Github" type="button" onclick="location.href = '/user/login';"/>
     {{/if}}
     </div>
 
+    <div>
+        <p>Or map the contributors of repo</p>
+    </div>
     <div>
         <p>Enter a repo to pull (owner/reponame):</p>
     <form action="/repo"  method="post">

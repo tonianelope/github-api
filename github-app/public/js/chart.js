@@ -9,10 +9,7 @@ d3.json(data_url, loadData);
 function loadData(json) {
     //data
     data = sortData(json);
-
-
-    visualize(undefined);
-
+    visualize();
     // window.onresize = function () {
     //     d3.select("svg").remove();
     //     visualize(undefined);
@@ -24,12 +21,28 @@ function reset() {
     d3.json(data_url, loadData);
 }
 
-function visualize(filter) {
+function filterRepo(filter) {
+    console.log(filter);
+    if(filter){
+        data = data.filter(function (elem) {
+            return elem.repo === filter;
+        });
+    }
+    d3.select("svg").remove();
+    visualize();
+}
+
+function filterOut(filter) {
     if(filter){
         data = data.filter(function (elem) {
             return elem.repo !== filter;
         });
     }
+    d3.select("svg").remove();
+    visualize();
+}
+
+function visualize() {
 
     //style
     var pad = 10;
@@ -46,14 +59,9 @@ function visualize(filter) {
         })])
         .range([0, r * 3]);
 
-    var colorScale;
-    if(filter){
-        colorScale = d3.scale.category20()
-            .domain(arrayFromProperty(data, "name"));
-    }else{
-        colorScale = d3.scale.category20()
+    var colorScale = d3.scale.category20()
             .domain(arrayFromProperty(data, "repo"));
-    }
+
 
 
     //bars
@@ -150,7 +158,7 @@ function visualize(filter) {
     });
     bars.on("click", function (d) {
         d3.select("svg").remove();
-        visualize(d.data.repo);
+        filterOut(d.data.repo);
         //window.open(d.data.url, "_blank")
     });
 }
