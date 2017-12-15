@@ -1,2 +1,2 @@
-web: gunicorn playground.pyGithub.login:app --log-file -
+web: sh -c 'cd ./github-app && npm start'
 
