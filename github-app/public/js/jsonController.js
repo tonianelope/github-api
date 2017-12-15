@@ -44,7 +44,7 @@ exports.makeJSON = (repo_name, cb) => {
                     }
                     console.log(new_map_data);
                     console.log("writing json");
-                    fs.writeFile(`public/json/repo.json`, JSON.stringify(new_map_data), (err) => {
+                    fs.writeFile(`github-app/public/json/repo.json`, JSON.stringify(new_map_data), (err) => {
                         if (err) cb(err, undefined);
                         console.log("Wrote file");
                         cb(undefined);
