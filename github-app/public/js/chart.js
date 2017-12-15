@@ -1,9 +1,7 @@
 
 var data_url = "../json/files.json";
-var colors_url = d3.scale.category20();
-var data, filter;
+var data;
 
-console.log(colors_url);
 d3.json(data_url, loadData);
 
 function loadData(json) {
@@ -169,33 +167,33 @@ function sortData(data) {
     //sort by filter
     data.sort(sortProperty(filter));
 
-    //break array into families
-    var families = d3.nest()
+    //break array into repos
+    var repos = d3.nest()
         .sortValues(sortProperty(filter))
         .key(function (d) {
             return d.repo;
         })
         .entries(data);
 
-    //sort families by total filter
-    families.forEach(function (family) {
+    //sort repos by total filter
+    repos.forEach(function (family) {
         family.size = 0;
         family.values.forEach(function (member) {
             family.size += member.size;
         })
     });
-    families.sort(sortProperty(filter));
+    repos.sort(sortProperty(filter));
 
     //move "other" to end no matter what
-    families.forEach(function (obj, i) {
+    repos.forEach(function (obj, i) {
         if (obj.key === "Other") {
-            families.push(families[i])
-            families.splice(i, 1);
+            repos.push(repos[i])
+            repos.splice(i, 1);
             return;
         }
     });
 
-    return flattenTree(families);
+    return flattenTree(repos);
 }
 
 function flattenTree(tree) {

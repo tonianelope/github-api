@@ -1,3 +1,5 @@
+Student num: 15336726
+
 # Github App
 
 This repo is a web app visualising some data from the gihub api v3.
