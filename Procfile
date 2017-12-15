@@ -1,2 +1,2 @@
-web: sh -c 'cd ./github-app && npm start'
+web: node github-app/bin/www
 
