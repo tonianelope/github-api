@@ -46,8 +46,15 @@ function visualize(filter) {
         })])
         .range([0, r * 3]);
 
-    var colorScale = d3.scale.category20()
-        .domain(arrayFromProperty(data, "repo"));
+    var colorScale;
+    if(filter){
+        colorScale = d3.scale.category20()
+            .domain(arrayFromProperty(data, "size"));
+    }else{
+        colorScale = d3.scale.category20()
+            .domain(arrayFromProperty(data, "repo"));
+    }
+
 
     //bars
     var svg = d3.select("body")
