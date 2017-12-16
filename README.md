@@ -48,3 +48,7 @@ Register your own github app for the authentication and set the envirnment varia
 # Playground
 
 Trying out the github api and different libraries for it
+
+# Screenshots
+
+The folder contains a few sample screenshots of what the app looks like.

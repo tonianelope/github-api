@@ -20,14 +20,17 @@ function reset() {
 }
 
 function filterRepo(filter) {
-    console.log(filter);
-    if(filter){
-        data = data.filter(function (elem) {
-            return elem.repo === filter;
-        });
-    }
-    d3.select("svg").remove();
-    visualize();
+    d3.json(data_url, (json)=>{
+        data = sortData(json);
+        console.log(filter);
+        if(filter){
+            data = data.filter(function (elem) {
+                return elem.repo === filter;
+            });
+        }
+        d3.select("svg").remove();
+        visualize();
+    });
 }
 
 function filterOut(filter) {
