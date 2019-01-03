@@ -4,15 +4,16 @@
     {{#if error}}
         <h2 class="error">{{error}}</h2>
     {{/if}}
-
+   
+    {{#if login}}
     <div>
         <p>Login to see a breakdown of your repositories</p>
     </div>
     <div>
-    {{#if login}}
         <input value="Login to Github" type="button" onclick="location.href = '/user/login';"/>
-    {{/if}}
     </div>
+    {{/if}}
+    
 
     <div>
         <p>Or map the contributors of repo</p>

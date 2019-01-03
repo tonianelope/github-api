@@ -1,4 +1,3 @@
-Student num: 15336726
 
 # Github App
 
@@ -7,7 +6,9 @@ This repo is a web app visualising some data from the gihub api v3.
 
 The website shows 2 different sets of data in 2 access modes:
 
-## The Map
+## The Contribution Map
+
+![Map](https://github.com/tonianelope/github-api/blob/master/Screenshots/Screenshot-MAP.png)
 
 The map graphs the location of the contributors and their contribution on a worldmap.
 The circle size shows their contributions.
@@ -28,15 +29,20 @@ Selecting a saved repo loads the data straight from the database into the json a
 
 #### clicking the map tab
 
-will repload the last displayed repo
+reploads the last displayed repo
 
 ## The Profile
 
 This section can only be accessed by loging in via github.
-The profile lists the repos a poerson contributed to, the owner and their visibility.
+The profile lists the repos the user contributed to, the owner and their visibility.
+
+![Profile](https://github.com/tonianelope/github-api/blob/master/Screenshots/Screenshot-PROFILE1.png)
 
 It also graphs the files in all the repos based on size (images and apks are excluded as they are usually way bigger than any other files). The bars are grouped based on repos and sorted by total repo size.
 Hovering over the bar shows the file path, size and at the bottom the repo that it belongs to.
+
+![Profile-Repos](https://github.com/tonianelope/github-api/blob/master/Screenshots/Screenshot-PROFILE2.png)
+![Profile-Repo](https://github.com/tonianelope/github-api/blob/master/Screenshots/Screenshot-PROFILE5.png)
 
 The user can logout with a button at the right top.
 
