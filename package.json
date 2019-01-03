@@ -7,21 +7,20 @@
     "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
-    "async": "^2.6.0",
-    "body-parser": "~1.18.2",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
-    "express": "~4.15.5",
+    "async": "^2.6.1",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "debug": "^2.6.9",
+    "express": "^4.15.5",
     "fs": "0.0.1-security",
-    "hbs": "~4.0.1",
-    "mongoose": "^4.13.6",
-    "morgan": "~1.9.0",
-    "nodemon": "^1.12.5",
-    "octonode": "^0.9.1",
-    "request": "^2.83.0",
-    "serve-favicon": "~2.4.5"
+    "hbs": "^4.0.1",
+    "mongoose": "^4.13.17",
+    "morgan": "^1.9.1",
+    "octonode": "^0.9.5",
+    "request": "^2.88.0",
+    "serve-favicon": "^2.4.5"
   },
   "devDependencies": {
-    "nodemon": "^1.12.5"
+    "nodemon": "^1.18.9"
   }
 }
