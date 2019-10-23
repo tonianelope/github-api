@@ -14,7 +14,7 @@
     "express": "^4.15.5",
     "fs": "0.0.1-security",
     "hbs": "^4.0.1",
-    "mongoose": "^4.13.17",
+    "mongoose": "^5.7.6",
     "morgan": "^1.9.1",
     "octonode": "^0.9.5",
     "request": "^2.88.0",
